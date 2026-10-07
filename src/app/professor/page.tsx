@@ -1,6 +1,7 @@
 import {requireRole} from "@/lib/auth";
 import {supabaseAdmin} from "@/lib/supabase/admin";
 import {TeacherGradeEntry} from "@/components/teacher-grade-entry";
+import {TeacherAttendanceMaterials} from "@/components/teacher-attendance-materials";
 
 export default async function Page(){
   const teacher=await requireRole("teacher");
@@ -30,6 +31,10 @@ export default async function Page(){
       {!assignments?.length&&<p className="text-sm text-slate-600">Não existem alocações ativas para o seu perfil.</p>}
     </section>
     <TeacherGradeEntry
+      assignments={(assignments??[]).map(a=>({id:a.id,class_id:a.class_id,subject_id:a.subject_id,academic_year:a.academic_year,class_label:`Classe ${a.classes?.level} • Turma ${a.classes?.name}`,subject_label:a.subjects?.name??""}))}
+      students={(students??[]).map(s=>({id:s.id,full_name:s.full_name,registration_number:s.registration_number,class_id:s.class_id}))}
+    />
+    <TeacherAttendanceMaterials
       assignments={(assignments??[]).map(a=>({id:a.id,class_id:a.class_id,subject_id:a.subject_id,academic_year:a.academic_year,class_label:`Classe ${a.classes?.level} • Turma ${a.classes?.name}`,subject_label:a.subjects?.name??""}))}
       students={(students??[]).map(s=>({id:s.id,full_name:s.full_name,registration_number:s.registration_number,class_id:s.class_id}))}
     />
