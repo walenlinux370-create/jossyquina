@@ -13,7 +13,7 @@ export default async function Page(){
     supabase.from("schedules").select("id,weekday,starts_at,ends_at,room,subject_id,subjects(name)").order("weekday").order("starts_at"),
     supabase.from("materials").select("id,title,mime_type,size_bytes,created_at,subject_id,subjects(name)").order("created_at",{ascending:false})
   ]);
-  const grades=gradesResult.data??[], attendance=attendanceResult.data??[], schedules=scheduleResult.data??[], materials=materialsResult.data??[];
+  const grades=gradesResult.data??[], attendance=attendanceResult.data??[], schedules=scheduleResult.data??[], materials=materialsResult.data??[];\n  const materialsWithLinks=await Promise.all(materials.map(async m=>{ const {data}=await supabase.storage.from("materials").createSignedUrl(m.storage_path,3600); return {...m,download_url:data?.signedUrl??null}; }));
   const present=attendance.filter(a=>a.present).length, absent=attendance.filter(a=>!a.present).length;
 
   return <main className="container-site py-10">
@@ -43,7 +43,7 @@ export default async function Page(){
     </div></section>
 
     <section className="mt-10"><h2 className="text-2xl font-black">Materiais da turma</h2><div className="mt-4 grid gap-3 md:grid-cols-2">
-      {materials.map(m=><article className="card p-4" key={m.id}><h3 className="font-black">{m.title}</h3><p className="mt-1 text-sm text-slate-600">{m.subjects?.name??"Disciplina"} • {m.mime_type} • {Math.ceil(m.size_bytes/1024)} KB</p></article>)}
+      {materialsWithLinks.map(m=><article className="card p-4" key={m.id}><h3 className="font-black">{m.title}</h3><p className="mt-1 text-sm text-slate-600">{m.subjects?.name??"Disciplina"} • {m.mime_type} • {Math.ceil(m.size_bytes/1024)} KB</p>{m.download_url&&<a className="mt-3 inline-block rounded-lg bg-yellow-400 px-4 py-2 font-bold text-black" href={m.download_url} target="_blank" rel="noreferrer">Abrir material</a>}</article>)}
       {!materials.length&&<p className="text-sm text-slate-600">Ainda não existem materiais disponíveis.</p>}
     </div></section>
   </main>;
