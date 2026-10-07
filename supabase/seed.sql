@@ -1,0 +1,1 @@
+insert into public.classes(level,name,academic_year) values(1,'A',2026),(1,'B',2026),(7,'A',2026),(10,'A',2026) on conflict do nothing;

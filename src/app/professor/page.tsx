@@ -1,0 +1,1 @@
+import {requireRole} from "@/lib/auth";export default async function Page(){await requireRole("teacher");return <main className="container-site py-14"><h1 className="text-4xl font-black">Painel do Professor</h1><p className="mt-3 text-slate-600">Apenas turmas, disciplinas e alunos das alocações do professor.</p></main>}
