@@ -3,17 +3,17 @@
 import {useState} from "react";
 
 export function AdminStudentActions({studentId,status}:{studentId:string;status:string}) {
-  const [code,setCode]=useState<string|null>(null);
+  const [code,setCode]=useState<string|null>(null);\n  const [loginIdentifier,setLoginIdentifier]=useState<string|null>(null);
   const [busy,setBusy]=useState(false);
   const [message,setMessage]=useState("");
 
   async function issueCode(){
-    setBusy(true); setMessage(""); setCode(null);
+    setBusy(true); setMessage(""); setCode(null); setLoginIdentifier(null);
     const res=await fetch(`/api/admin/students/${studentId}/code`,{method:"POST"});
     const data=await res.json().catch(()=>({}));
     setBusy(false);
     if(!res.ok){setMessage("Não foi possível emitir o código.");return;}
-    setCode(data.code);
+    setCode(data.code);\n    setLoginIdentifier(data.login_identifier ?? null);
   }
 
   async function deactivate(){
@@ -30,7 +30,7 @@ export function AdminStudentActions({studentId,status}:{studentId:string;status:
       {busy ? "Aguarde..." : "Emitir / regenerar código"}
     </button>
     {status!=="inactive" && <button className="rounded-lg border border-red-300 px-3 py-2 text-sm font-bold text-red-700 disabled:opacity-50" disabled={busy} onClick={deactivate}>Desativar</button>}
-    {code && <span className="rounded-lg bg-black px-3 py-2 font-mono text-sm font-bold tracking-widest text-yellow-300" title="Mostrar apenas uma vez">Código: {code}</span>}
+    {code && <div className="rounded-lg bg-black px-3 py-2 text-sm font-bold text-yellow-300" title="Mostrar apenas uma vez"><div>Login: {loginIdentifier}</div><div className="font-mono tracking-widest">Código: {code}</div></div>}
     {message && <span className="text-sm text-red-700">{message}</span>}
   </div>;
 }
