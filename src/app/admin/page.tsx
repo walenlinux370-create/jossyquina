@@ -1,6 +1,7 @@
 import {requireRole} from "@/lib/auth";
 import {supabaseAdmin} from "@/lib/supabase/admin";
 import {AdminStudentActions} from "@/components/admin-student-actions";
+import {AdminRegistrationQueue} from "@/components/admin-registration-queue";
 
 export default async function Page(){
   await requireRole("admin");
@@ -18,6 +19,7 @@ export default async function Page(){
   return <main className="container-site py-10">
     <h1 className="text-4xl font-black">Painel Administrativo</h1>
     <p className="mt-2 text-slate-600">Gestão hierárquica: classe → turma → estudantes. Operações sensíveis são executadas no servidor e auditadas.</p>
+    <AdminRegistrationQueue />
     <section className="mt-8 grid gap-5 md:grid-cols-4">
       {["Estudantes","Matriz Curricular","Notícias e Mídia","Auditoria"].map(x=><div className="card p-6" key={x}><h2 className="font-black">{x}</h2><p className="mt-2 text-sm text-slate-600">Operações protegidas por RBAC.</p></div>)}
     </section>
