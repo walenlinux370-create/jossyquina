@@ -248,7 +248,7 @@ create policy schedules_student on public.schedules for select to authenticated 
 create policy materials_student on public.materials for select to authenticated using(class_id=(select class_id from public.students where id=public.my_student_id()));
 
 revoke all on public.audit_logs from anon,authenticated;
-revoke all on public.students(auth_code_hash,failed_code_attempts,locked_until) from anon,authenticated;
+revoke select on public.students(auth_code_hash,failed_code_attempts,locked_until) from anon,authenticated;
 revoke execute on function public.issue_student_auth_code(uuid,uuid) from public,anon,authenticated;
 revoke execute on function public.verify_student_login(text,text,inet) from public,anon,authenticated;
 revoke execute on function public.set_final_grade(uuid) from public,anon;
