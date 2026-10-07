@@ -3,7 +3,8 @@ create or replace function public.approve_registration(
   p_request_id uuid,
   p_class_id uuid,
   p_registration_number text,
-  p_email text default null
+  p_email text default null,
+  p_actor uuid
 )
 returns uuid
 language plpgsql
@@ -13,7 +14,7 @@ as $$
 declare
   r public.registration_requests%rowtype;
   new_student uuid;
-  admin_id uuid:=auth.uid();
+  admin_id uuid:=p_actor;
   class_level smallint;
 begin
   if not exists(select 1 from public.user_profiles where id=admin_id and role='admin' and is_active) then
