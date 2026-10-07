@@ -33,7 +33,8 @@ export async function POST(req:Request){
     p_request_id:parsed.data.request_id,
     p_class_id:parsed.data.class_id,
     p_registration_number:parsed.data.registration_number,
-    p_email:parsed.data.email??null
+    p_email:parsed.data.email??null,
+    p_actor:admin.id
   });
   if(error||!studentId) return NextResponse.json({error:"unable_to_approve"},{status:400});
 
