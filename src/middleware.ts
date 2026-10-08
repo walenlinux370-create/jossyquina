@@ -1,6 +1,13 @@
 import {createServerClient} from "@supabase/ssr";
 import {NextResponse,type NextRequest} from "next/server";
 
+const publicAuthPaths=[
+  "/admin/login",
+  "/admin/recuperar",
+  "/admin/redefinir",
+  "/professor/login"
+];
+
 export async function middleware(request:NextRequest){
   let response=NextResponse.next({request});
   const supabase=createServerClient(
@@ -20,8 +27,9 @@ export async function middleware(request:NextRequest){
   const {data:{user}}=await supabase.auth.getUser();
   const path=request.nextUrl.pathname;
   const protectedPath=/^\/(admin|professor|portal)(\/|$)/.test(path);
+  const publicAuthPath=publicAuthPaths.some(item=>path===item);
 
-  if(protectedPath&&!user){
+  if(protectedPath&&!user&&!publicAuthPath){
     if(path.startsWith("/api/"))return NextResponse.json({error:"unauthorized"},{status:401});
     const destination=path.startsWith("/admin")?"/admin/login":path.startsWith("/professor")?"/professor/login":"/aceder";
     return NextResponse.redirect(new URL(destination,request.url));
